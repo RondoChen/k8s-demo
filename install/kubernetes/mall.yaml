@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mall
+  namespace: xyz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mall
+  template:
+    metadata:
+      labels:
+        app: mall
+    spec:
+      containers:
+      - name: mall
+        image: nginx:alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /healthz/ready
+            port: 8000
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /healthz/ready
+            port: 8000
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 200m
+            memory: 128Mi
+        volumeMounts:
+        - name: prod-config
+          mountPath: /etc/nginx/conf.d/mall.conf
+          subPath: mall.conf
+      volumes:
+      - name: prod-config
+        configMap:
+          name: app-config
+          items:
+          - key: mall-nginx-config
+            path: mall.conf

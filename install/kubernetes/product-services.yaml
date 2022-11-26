@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: product
+  namespace: pdm
+spec:
+  ports:
+    - name: http-product
+      port: 3000
+  selector:
+    app: product

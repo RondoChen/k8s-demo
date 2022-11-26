@@ -1,0 +1,28 @@
+
+@host = http://localhost:6000
+@ticket = eyJvcGVuX2lkIjoiZjMzZTZmOWMtNjI4Mi0xMWVhLWEwZmQtNTI1NDAwOWUwM2UxIiwiZXhwaXJlc19pbiI6MTU2NjIwODIzMDAsInNpZ24iOiI0MTgwODhjMzc0ZDVjNzMwMzU4ZTBhZWEwNWNiMzA1YmE5MDA1OWQzOTkwNzJkNDI1ZTc1YmU4NTM1MTJlMjBhIn0=
+
+### 增加商品
+POST {{host}}/user/shopcart?ticket={{ticket}}  HTTP/1.1
+Content-Type: application/json
+
+{
+  "goods_id":3,
+  "quantity": 1
+}
+
+
+### 修改商品
+PUT {{host}}/user/shopcart?ticket={{ticket}}  HTTP/1.1
+Content-Type: application/json
+
+{
+  "goods_id": 3,
+  "quantity": 1
+}
+
+### get
+GET {{host}}/user/shopcart?ticket={{ticket}}  HTTP/1.1
+
+Content-Type: application/json
+

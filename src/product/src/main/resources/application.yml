@@ -1,0 +1,43 @@
+# [server]
+server:
+  port: 3000
+
+# [appVersion]
+app:
+  version: ${VERSION:v1}
+
+# [spring]
+spring:
+  application:
+    name: product
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        hbm2ddl:
+          auto: update
+  datasource:
+    url: jdbc:mysql://${DB_HOST:127.0.0.1}/${DB_DATABASE:xyzshop}?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
+    username: ${DB_USERNAME:xyzshop_user}
+    password: ${DB_PASSWORD:P@ssword123}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+# [logging]
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+    hibernate: DEBUG
+  file: /var/log/product/access.log
+  pattern:
+    file: '%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n'
+    console: '%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n'
+
+# [pagehelper]
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql

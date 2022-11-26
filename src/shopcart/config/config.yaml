@@ -1,0 +1,10 @@
+name: shopcart
+port: 6000
+grpcPort: 9003
+redis:
+  address: $REDIS_ADDRESS
+  password: $REDIS_PASSWORD
+  db: $REDIS_DB
+providers:
+  product: $SERVICE_PRODUCT
+  passport: $SERVICE_PASSPORT

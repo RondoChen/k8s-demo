@@ -1,0 +1,31 @@
+{
+  "name": "passport",
+  "version": "1.0.5",
+  "description": "Passport service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "egg-bin dev",
+    "start": "EGG_SERVER_ENV=prod node index"
+  },
+  "repository": {
+    "type": "git"
+  },
+  "author": "Cloudbeer<cloudbeer@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "egg-bin": "^4.14.0"
+  },
+  "dependencies": {
+    "cloudoll": "^2.0.5",
+    "common-tools": "^0.0.9",
+    "moment": "^2.29.1",
+    "sha256": "^0.2.0",
+    "uuid": "^8.3.2",
+    "mysql": "^2.18.1"
+  },
+  "egg": {
+    "framework": "cloudoll",
+    "port": 5000
+  }
+}

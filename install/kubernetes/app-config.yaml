@@ -1,0 +1,167 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: xyz
+  annotations:
+    strategy.spinnaker.io/versioned: "false"
+data: 
+  DB_HOST: mysql-0.mysql.db
+  DB_HOST_READ: mysql-read.db
+  DB_USERNAME: xyzshop_user
+  DB_DATABASE: xyzshop
+  REDIS_ADDRESS: redis.db:6379
+  REDIS_DB: '0'
+  SERVICE_PASSPORT: http://passport.xyz:5000
+  SERVICE_PRODUCT: http://product.pdm:3000
+  SERVICE_SHOPCART: http://shopcart.xyz:6000
+  SERVICE_ORDER: http://order.xyz:7000
+  mall-nginx-config: |-
+    server { 
+      listen       8000;
+      index   index.html;
+
+      location = /favicon.ico { access_log off; log_not_found off; }
+      location = /robots.txt  { access_log off; log_not_found off; }
+
+      location / {
+        proxy_http_version 1.1;
+        proxy_pass  http://cos.rondochen.com;
+        rewrite ^/(.*)$ /mall/index.html break;
+      }
+
+      location /healthz/ready {
+        access_log off;
+        return 200 "ok\n";
+      }
+
+      location ^~/api/review/  {
+        root /app/public;
+        rewrite ^/api/review/(.*)$ /$1 break;
+        try_files $uri $uri/ /index.php?$args;
+      }
+
+      location ~ \.php$ {
+        set $newurl $request_uri;
+        if ($newurl ~ ^/api/review(.*)$) {
+          set $newurl $1;
+          root /app/public;
+        }
+
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass review.pdm:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param REQUEST_URI $newurl;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_intercept_errors off;
+        fastcgi_buffer_size 16k;
+        fastcgi_buffers 4 16k;
+      }
+
+      location ^~/api/passport/ {
+        proxy_http_version 1.1;
+        proxy_pass      http://passport.xyz:5000/;
+      }
+      location ^~/api/product/ {
+        proxy_http_version 1.1;
+        proxy_pass      http://product.pdm:3000/;
+      }
+      location ^~/api/shopcart/ {
+        proxy_http_version 1.1;
+        proxy_pass      http://shopcart.xyz:6000/;
+      }
+      location ^~/api/order/ {
+        proxy_http_version 1.1;
+        proxy_pass      http://order.xyz:7000/;
+      }
+    }
+  mall-nginx-config-demo: |-
+    server { 
+      listen       8000;
+      index   index.html;
+
+      location = /favicon.ico { access_log off; log_not_found off; }
+      location = /robots.txt  { access_log off; log_not_found off; }
+
+      location / {
+        proxy_http_version 1.1;
+        proxy_pass  https://training-1251707795.file.myqcloud.com;
+        rewrite ^/(.*)$ /mall/index.html break;
+      }
+
+      location /healthz/ready {
+        access_log off;
+        return 200 "ok\n";
+      }
+
+      location ^~/api/product/ {
+        proxy_http_version 1.1;
+        proxy_pass      http://product.pdm:3000/;
+      }
+    }
+   
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: pdm
+  annotations:
+    strategy.spinnaker.io/versioned: "false"
+data: 
+  DB_HOST: mysql-0.mysql.db
+  DB_HOST_READ: mysql-read.db
+  DB_USERNAME: xyzshop_user
+  DB_DATABASE: xyzshop
+  SERVICE_PASSPORT: http://passport.xyz:5000
+  SERVICE_PRODUCT: http://product.pdm:3000
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: db
+  annotations:
+    strategy.spinnaker.io/versioned: "false"
+data: 
+  DB_HOST: mysql-0.mysql.db
+  DB_HOST_READ: mysql-read.db
+  DB_USERNAME: xyzshop_user
+  DB_DATABASE: xyzshop
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: app-config
+  namespace: xyz
+  annotations:
+    strategy.spinnaker.io/versioned: "false"
+data: 
+  DB_PASSWORD: UEBzc3dvcmQxMjM=
+  REDIS_PASSWORD: cmVkMXNQQHNz
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: app-config
+  namespace: pdm
+  annotations:
+    strategy.spinnaker.io/versioned: "false"
+data: 
+  DB_PASSWORD: UEBzc3dvcmQxMjM=
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: app-config
+  namespace: db
+  annotations:
+    strategy.spinnaker.io/versioned: "false"
+data: 
+  DB_PASSWORD: UEBzc3dvcmQxMjM=
+  REDIS_PASSWORD: cmVkMXNQQHNz

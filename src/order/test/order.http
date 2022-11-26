@@ -1,0 +1,44 @@
+## 订单
+
+@host = http://localhost:7000
+@ticket = eyJvcGVuX2lkIjoiZjMzZTZmOWMtNjI4Mi0xMWVhLWEwZmQtNTI1NDAwOWUwM2UxIiwiZXhwaXJlc19pbiI6MTU2NjIwODIzMDAsInNpZ24iOiI0MTgwODhjMzc0ZDVjNzMwMzU4ZTBhZWEwNWNiMzA1YmE5MDA1OWQzOTkwNzJkNDI1ZTc1YmU4NTM1MTJlMjBhIn0=
+
+
+
+### 创建订单
+POST {{host}}/user/order  HTTP/1.1
+?ticket={{ticket}}
+Content-Type: application/json
+
+{
+  "memo":"请在半夜送货",
+  "consignee_name":"张si",
+  "address":"呵呵呵",
+  "consignee_tel":"13000000000",
+  "order_status": 1,
+  "items":[
+    {
+      "goods_id": 1,
+      "quantity":1
+    },
+    {
+      "goods_id": 2,
+      "quantity":1
+    },
+    {
+      "goods_id": 5,
+      "quantity":1
+    }
+  ]
+}
+
+
+
+### 获取订单列表
+GET {{host}}/user/orders  HTTP/1.1
+?ticket={{ticket}}
+
+
+### 获取订单详情
+GET {{host}}/user/order/id/4  HTTP/1.1
+?ticket={{ticket}}

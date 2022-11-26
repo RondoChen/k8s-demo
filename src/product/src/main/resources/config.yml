@@ -1,0 +1,2 @@
+services:
+  passport_service_address: http://passport.xyz:5000

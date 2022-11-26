@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: review
+  namespace: pdm
+spec:
+  ports:
+    - name: tcp-review
+      port: 9000
+  selector:
+    app: review
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: review
+  namespace: pdm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: review
+  template:
+    metadata:
+      labels:
+        app: review
+    spec:
+      containers:
+      - name: review
+        image: rondochen/review:1.0
+        imagePullPolicy: Always
+        env:
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: DB_HOST
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: app-config
+                key: DB_PASSWORD
+          - name: DB_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: DB_USERNAME
+          - name: DB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: DB_DATABASE
+          - name: SERVICE_PASSPORT
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: SERVICE_PASSPORT
+        command:
+          - sh
+          - -c
+          - |
+            cat <<EOF > /app/.env
+            APP_NAME=review
+            APP_KEY=base64:QHVH+p7eTaKkYNtJI5+0koXGH1FdXfFrLdj6N3KPdbM=
+            APP_DEBUG=true
+            APP_ENV=local
+            APP_URL=http://review.pdm:9000
+            LOG_CHANNEL=stack
+            LOG_LEVEL=debug
+            DB_CONNECTION=mysql
+            DB_HOST=${DB_HOST}
+            DB_PORT=3306
+            DB_DATABASE=${DB_DATABASE}
+            DB_USERNAME=${DB_USERNAME}
+            DB_PASSWORD=${DB_PASSWORD}
+            SERVICE_PASSPORT=${SERVICE_PASSPORT}
+            BROADCAST_DRIVER=log
+            CACHE_DRIVER=file
+            FILESYSTEM_DRIVER=local
+            QUEUE_CONNECTION=sync
+            SESSION_DRIVER=file
+            SESSION_LIFETIME=120
+            EOF
+            docker-php-entrypoint php-fpm
+        ports:
+        - containerPort: 9000
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 200m
+            memory: 128Mi

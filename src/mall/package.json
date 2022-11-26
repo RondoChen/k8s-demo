@@ -1,0 +1,46 @@
+{
+  "name": "mall",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
+    "@testing-library/user-event": "^13.2.1",
+    "antd": "^4.16.11",
+    "babel-plugin-import": "^1.13.3",
+    "customize-cra": "^1.0.0",
+    "less": "^4.1.1",
+    "less-loader": "^5.0.0",
+    "react": "^17.0.2",
+    "react-app-rewired": "^2.1.8",
+    "react-cookies": "^0.1.1",
+    "react-dom": "^17.0.2",
+    "react-responsive": "^8.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.3"
+  },
+  "scripts": {
+    "start": "export PORT=8000 && react-app-rewired start",
+    "build": "GENERATE_SOURCEMAP=false PUBLIC_URL=http://cos.rondochen.com/mall/  react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "http-proxy-middleware": "^2.0.1"
+  }
+}

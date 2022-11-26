@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: mall-ingress
+  namespace: xyz
+  annotations:
+    # kubernetes.io/ingress.class: qcloud
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              serviceName: mall
+              servicePort: 8000

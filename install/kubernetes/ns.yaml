@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: xyz
+spec:
+  finalizers:
+    - kubernetes
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pdm
+spec:
+  finalizers:
+    - kubernetes
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: db
+spec:
+  finalizers:
+    - kubernetes

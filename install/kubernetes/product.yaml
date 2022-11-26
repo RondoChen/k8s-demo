@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-v1
+  namespace: pdm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: product
+      version: v1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: product
+        version: v1
+    spec:
+      containers:
+      - name: product
+        image: rondochen/product:1.0
+        imagePullPolicy: Always
+        env:
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: DB_HOST_READ
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: app-config
+                key: DB_PASSWORD
+          - name: DB_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: DB_USERNAME
+          - name: DB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: DB_DATABASE
+          - name: VERSION
+            value: v1
+        command:
+          - java
+          - -Xmx400m
+          - -jar
+          - /app/product.jar
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /healthz/ready
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /healthz/ready
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 2048Mi
+          requests:
+            cpu: 250m
+            memory: 512Mi
+
