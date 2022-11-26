@@ -20,7 +20,7 @@ export default class BasicLayout extends I18nComponent {
 
                         <Header style={{ background: 'rgba(255,255,255)', padding: 0, borderBottom: '1px', marginBottom: '20px' }}>
                             <div className='logo'>
-                                <img src="https://microservices-demo-mall-1305426035.cos.ap-beijing.myqcloud.com/mesh-shop-logo.png" alt='logo' />
+                                <img src="http://cos.rondochen.com/mall/mesh-shop-logo.png" alt='logo' />
                                 {this.R("SiteName")}
                             </div>
                         </Header>

@@ -16,6 +16,7 @@ vendor/**/Tests*
 **.gitattributes
 **.sass-cache
 *.env*
+
 *.config.js
 ?ulpfile.js
 ?untfile.js
@@ -30,9 +31,3 @@ run
 run.ps1
 
 test/
-.dockerignore
-.gitignore
-*.md
-.git/
-.idea/
-.DS_Store/

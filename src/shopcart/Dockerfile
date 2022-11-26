@@ -1,15 +1,19 @@
+# FROM golang:alpine
+
+# WORKDIR /app
+# COPY build/. /app
+
+# EXPOSE 6000
+# CMD ["./main"]
+
+
 # build
-FROM golang:alpine3.15 AS builder
-# ARG GOPROXY=https://goproxy.cn,direct
-WORKDIR /src
-COPY go.mod .
-COPY go.sum .
-RUN go mod download -x
-COPY . /src
-RUN go build -o main -x
+FROM golang:alpine AS builder
+ADD . /src
+RUN cd /src && go build -o main
 
 # runtime
-FROM alpine:3.17
+FROM alpine
 WORKDIR /app
 COPY --from=builder /src/main /app/
 COPY ./config/config.yaml /app/config/config.yaml

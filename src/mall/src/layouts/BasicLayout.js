@@ -162,7 +162,7 @@ export default class BasicLayout extends I18nComponent {
                 lg={{ span: 20, offset: 2 }}
                 xl={{ span: 18, offset: 3 }} >
                 <div className='logo'>
-                  <a href='/'><img src="https://microservices-demo-mall-1305426035.cos.ap-beijing.myqcloud.com/mesh-shop-logo.png" title={this.R("SiteName")} alt={this.R("SiteName")} /></a>
+                  <a href='/'><img src="http://cos.rondochen.com/mall/mesh-shop-logo.png" title={this.R("SiteName")} alt={this.R("SiteName")} /></a>
                   <a href='/'>{this.R("SiteName")}</a>
                 </div>
                 <div className="main-menu">
