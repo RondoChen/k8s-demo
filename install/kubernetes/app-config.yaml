@@ -86,7 +86,7 @@ data:
 
       location / {
         proxy_http_version 1.1;
-        proxy_pass  https://training-1251707795.file.myqcloud.com;
+        proxy_pass  http://cos.rondochen.com;
         rewrite ^/(.*)$ /mall/index.html break;
       }
 
