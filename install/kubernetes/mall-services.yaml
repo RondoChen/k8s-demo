@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mall
+  namespace: xyz
+spec:
+  type: NodePort
+  ports:
+    - name: http-mall
+      port: 8000
+  selector:
+    app: mall

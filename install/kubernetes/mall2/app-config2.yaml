@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config2
+  namespace: xyz
+  annotations:
+    strategy.spinnaker.io/versioned: "false"
+data: 
+  mall-nginx-config: |-
+    server { 
+      listen       8000;
+      index   index.html;
+
+      location = /favicon.ico { access_log off; log_not_found off; }
+      location = /robots.txt  { access_log off; log_not_found off; }
+
+      location / {
+        proxy_http_version 1.1;
+        root /cos;
+        rewrite ^/(.*)$ /mall/index.html break;
+      }
+      location ^~/static/ {
+        root /cos/mall;
+      }
+
+      location /healthz/ready {
+        access_log off;
+        return 200 "ok\n";
+      }
+
+      location ^~/api/review/  {
+        root /app/public;
+        rewrite ^/api/review/(.*)$ /$1 break;
+        try_files $uri $uri/ /index.php?$args;
+      }
+
+      location ~ \.php$ {
+        set $newurl $request_uri;
+        if ($newurl ~ ^/api/review(.*)$) {
+          set $newurl $1;
+          root /app/public;
+        }
+
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass review.pdm:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param REQUEST_URI $newurl;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_intercept_errors off;
+        fastcgi_buffer_size 16k;
+        fastcgi_buffers 4 16k;
+      }
+
+      location ^~/api/passport/ {
+        proxy_http_version 1.1;
+        proxy_pass      http://passport.xyz:5000/;
+      }
+      location ^~/api/product/ {
+        proxy_http_version 1.1;
+        proxy_pass      http://product.pdm:3000/;
+      }
+      location ^~/api/shopcart/ {
+        proxy_http_version 1.1;
+        proxy_pass      http://shopcart.xyz:6000/;
+      }
+      location ^~/api/order/ {
+        proxy_http_version 1.1;
+        proxy_pass      http://order.xyz:7000/;
+      }
+    }
